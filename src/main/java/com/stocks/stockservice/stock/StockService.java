@@ -7,26 +7,37 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.sql.Date;
-import os;
 
 @Service
 public class StockService {
 
     public void loadStocks() {
-        String directory = System.getProperty("user.dir");
-        
-
-        
         //Initial load of stocks if the tables are empty
         File dir = new File("data/stocks");
         String[] directoryListing =dir.list();
 
-        //Get the names of the stocks and their id's
+        List<String> listings = Arrays.asList(directoryListing);
+        listings.sort(null);
+        
+        //Create scanner to get stock information
+        Scanner sc;
+
+        // Create scanner to get stockNames.
+        Scanner scStockName;
+        try {
+            scStockName = new Scanner(new File("data/symbols_valid_meta.csv"));
+            scStockName.useDelimiter(",");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Could not load in data from stocks.");
+            return;
+        }
+        
+        //Iterate through the directory for the stocks.
         for (int i = 0; i < directoryListing.length; i++) {
             String pathToFile = directoryListing[i];
+            pathToFile = "data/stocks/" + pathToFile;
             
-            // Create scanner to get information
-            Scanner sc;
             try {
                 sc = new Scanner(new File(pathToFile));
                 sc.useDelimiter(",");
@@ -35,26 +46,42 @@ public class StockService {
                 System.out.println("Could not load in data from stocks.");
                 return;
             }
+            
+
             //Get the symbol of the stock.
             String stockSymbol = pathToFile.substring(12, pathToFile.length() -4);
+
+            // Get the full name of the stock.
+            scStockName.nextLine();
+            scStockName.next();
+            String symbol = scStockName.next();
             
+            //Check if the symbols match up.
+            while (true) {
+                if (symbol.equals(stockSymbol)) {
+                    scStockName.nextLine();
+                    break;
+                }
+                scStockName.nextLine();
+                scStockName.next();
+                symbol = sc.next();
+            }
+
             //skip first Line
-            sc.nextLine();
+            String value = sc.nextLine();
             while (sc.hasNext()) {
                 String date_ = sc.next();
                 double open = sc.nextDouble();
                 double high = sc.nextDouble();
                 double low = sc.nextDouble();
+                sc.nextDouble();
                 double adjClose = sc.nextDouble();
-                int volume = sc.nextInt();
+                String volume_ = sc.nextLine();
+            
+                volume_ = volume_.substring(1, volume_.length());
+                int volume = Integer.parseInt(volume_);
 
                 Date date = Date.valueOf(date_);
-                
-
-
-                sc.nextLine();
-
-            
             } 
             
         }
