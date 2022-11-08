@@ -1,10 +1,8 @@
 package com.stocks.stock;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
 import com.stocks.stockprices.StockPrice;
 import com.stocks.stockprices.StockPriceService;
 
@@ -140,9 +138,6 @@ public class StockService {
             Date date;
 
             while (sc.hasNext()) {
-                if (symbol.equals("FTAI")) {
-                    String hello = "hello";
-                }
                 // If the input is null, skip the line.
                 try {
                     date_ = sc.next();
@@ -153,11 +148,11 @@ public class StockService {
                     adjClose = sc.nextDouble();
                     volume_ = sc.nextLine();    
                 } catch (InputMismatchException ime) {
-                    System.out.println("Could not fill in the data for a double for: " + symbol);
+                    System.out.println("Skipped final data point for: " + symbol);
                     break;
                 } 
                 catch (Exception e) {
-                    System.out.println("Could not load in the data for one of the inputs for: " + symbol);
+                    System.out.println("Skipped final data point for: " + symbol);
                     break;
                 }                
                 volume_ = volume_.substring(1, volume_.length());
@@ -170,7 +165,7 @@ public class StockService {
                     try {
                     volume = Integer.parseInt(volume_);
                     } catch (NumberFormatException ne) {
-                        System.out.println("Format occured on date: " + date_);
+                        System.out.println("Format error for voluem occured on date: " + date_);
                         break;
                     }
                 }
