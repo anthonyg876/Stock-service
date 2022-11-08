@@ -32,6 +32,21 @@ public class StockService {
         this.stockDao = stockDao;
     }
 
+    public void addStock(Stock stock) {
+        int result = stockDao.insertStock(stock);
+        if (result != 1) {
+            throw new IllegalStateException("Could not insert stock into the database.");
+        }
+    }
+
+    public List<Stock> selectStocks() {
+        return stockDao.selectStocks();
+    }
+
+    public void deleteStock(String id) {
+        stockDao.deleteStock(id);
+    }
+
     public void loadStocks() {
         //Initial load of stocks if the tables are empty
         File dir = new File("data/stocks");
@@ -170,13 +185,6 @@ public class StockService {
                 stockPrices.add(stockPrice);
             }
             stockPriceService.addStockPrices(stockPrices);  
-        }
-    }
-
-    public void addStock(Stock stock) {
-        int result = stockDao.insertStock(stock);
-        if (result != 1) {
-            throw new IllegalStateException("Could not insert stock into the database.");
         }
     }
 }

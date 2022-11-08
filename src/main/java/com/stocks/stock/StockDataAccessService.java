@@ -19,7 +19,9 @@ public class StockDataAccessService implements StockDao {
 
     @Override
     public List<Stock> selectStocks() {
-        throw new UnsupportedOperationException("not implemented");
+        String sql = "select symbol, fullName, inDJGT, inDJI, inNDX from stock order by symbol asc fetch first 100 rows only";
+        List<Stock> stocks = jdbcTemplate.query(sql, new StockRowMapper());
+        return stocks;
     }
 
     @Override
