@@ -32,8 +32,8 @@ public class IndexController {
         indexService.addNewIndex(index);
     }
 
-    @DeleteMapping("{id}")
-    public void deleteMovie(@PathVariable("id") String id) {
+    @DeleteMapping("/{id}")
+    public void deleteIndex(@PathVariable("id") String id) {
         indexService.deleteIndex(id);
     }
 

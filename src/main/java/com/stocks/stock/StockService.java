@@ -1,15 +1,36 @@
 package com.stocks.stock;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ext.SqlBlobSerializer;
+import com.stocks.stockprices.StockPrice;
+import com.stocks.stockprices.StockPriceService;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.sql.Date;
+import java.text.DecimalFormat;
 
 @Service
 public class StockService {
+
+    private static final DecimalFormat df = new DecimalFormat("0.00"); 
+
+    @Autowired
+    private StockPriceService stockPriceService;
+
+    private final StockDao stockDao;
+
+    public StockService(StockDao stockDao) {
+        this.stockDao = stockDao;
+    }
 
     public void loadStocks() {
         //Initial load of stocks if the tables are empty
@@ -32,6 +53,8 @@ public class StockService {
             System.out.println("Could not load in data from stocks.");
             return;
         }
+        //Skip over the first line.
+        scStockName.nextLine();
         
         //Iterate through the directory for the stocks.
         for (int i = 0; i < directoryListing.length; i++) {
@@ -47,45 +70,113 @@ public class StockService {
                 return;
             }
             
-
             //Get the symbol of the stock.
             String stockSymbol = pathToFile.substring(12, pathToFile.length() -4);
 
-            // Get the full name of the stock.
-            scStockName.nextLine();
+            // Get the symbol of the stock from the file. Ensure that they match.
             scStockName.next();
             String symbol = scStockName.next();
-            
+            String nameOfStock;
+            String inDJI;
+            String inDJGT;
+            String inNDX;
             //Check if the symbols match up.
             while (true) {
-                if (symbol.equals(stockSymbol)) {
+                if (!symbol.equals(stockSymbol)) {
                     scStockName.nextLine();
-                    break;
+                    scStockName.next();
+                    symbol = scStockName.next();
+                    continue;
                 }
-                scStockName.nextLine();
-                scStockName.next();
-                symbol = sc.next();
+                // Get the fullname of the Stock.
+                nameOfStock = scStockName.next();
+                if (nameOfStock.contains("\"")) {
+                    while (true) {
+                        String fullName = scStockName.next();
+                        nameOfStock = nameOfStock + fullName;
+                        if (fullName.contains("\"")) {
+                            break;
+                        }
+                    }
+                }
+                for (int j = 0; j < 9; j++) {
+                    scStockName.next();
+                }
+                inDJGT = scStockName.next();
+                inDJI = scStockName.next();
+                inNDX = scStockName.nextLine();
+                inNDX = inNDX.substring(1);
+                break;
             }
+            //Add stock to the database.
+            addStock(new Stock(symbol, nameOfStock, inDJGT, inDJI, inNDX));
 
             //skip first Line
-            String value = sc.nextLine();
-            while (sc.hasNext()) {
-                String date_ = sc.next();
-                double open = sc.nextDouble();
-                double high = sc.nextDouble();
-                double low = sc.nextDouble();
-                sc.nextDouble();
-                double adjClose = sc.nextDouble();
-                String volume_ = sc.nextLine();
-            
-                volume_ = volume_.substring(1, volume_.length());
-                int volume = Integer.parseInt(volume_);
+            sc.nextLine();
 
-                Date date = Date.valueOf(date_);
-            } 
-            
+            ArrayList<StockPrice> stockPrices = new ArrayList<>();
+            String date_;
+            double open;
+            double high;
+            double low;
+            double adjClose;
+            int volume;
+            String volume_;
+            Date date;
+
+            while (sc.hasNext()) {
+                if (symbol.equals("FTAI")) {
+                    String hello = "hello";
+                }
+                // If the input is null, skip the line.
+                try {
+                    date_ = sc.next();
+                    open = sc.nextDouble();
+                    high = sc.nextDouble();
+                    low = sc.nextDouble();
+                    sc.nextDouble();
+                    adjClose = sc.nextDouble();
+                    volume_ = sc.nextLine();    
+                } catch (InputMismatchException ime) {
+                    System.out.println("Could not fill in the data for a double for: " + symbol);
+                    break;
+                } 
+                catch (Exception e) {
+                    System.out.println("Could not load in the data for one of the inputs for: " + symbol);
+                    break;
+                }                
+                volume_ = volume_.substring(1, volume_.length());
+                // Cast volume to int if the string contains a decimal point.
+                if (volume_.contains(".")) {
+                    double _volume = Double.parseDouble(volume_);
+                    volume = (int)_volume;
+                }
+                else {
+                    try {
+                    volume = Integer.parseInt(volume_);
+                    } catch (NumberFormatException ne) {
+                        System.out.println("Format occured on date: " + date_);
+                        break;
+                    }
+                }
+                // Ensure that the date value can be inserted.
+                try {
+                    date = Date.valueOf(date_);
+                } catch (Exception e) {
+                    System.out.println("Could not parse date: " + date_);
+                    break;
+                }
+                StockPrice stockPrice = new StockPrice(date, low, open, volume, adjClose, symbol);
+                stockPrices.add(stockPrice);
+            }
+            stockPriceService.addStockPrices(stockPrices);  
         }
     }
 
-
+    public void addStock(Stock stock) {
+        int result = stockDao.insertStock(stock);
+        if (result != 1) {
+            throw new IllegalStateException("Could not insert stock into the database.");
+        }
+    }
 }
