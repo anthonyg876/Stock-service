@@ -1,11 +1,11 @@
-package com.stocks.stock;
+package com.stocks.stockprices;
 
 import lombok.*;
 import java.sql.Date;
 
 @ToString
-@AllArgsConstructor
-public class StockPrices {
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
+public class StockPrice {
     
     @Getter @Setter private Date dateOfPrice;
     @Getter @Setter private double low;
@@ -13,5 +13,7 @@ public class StockPrices {
     @Getter @Setter private int volume;
     @Getter @Setter private double adjClosed;
     @Getter @Setter private String companyId;
+
+    public StockPrice() {}
 
 }
