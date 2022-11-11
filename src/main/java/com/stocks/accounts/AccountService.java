@@ -1,6 +1,7 @@
 package com.stocks.accounts;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -32,8 +33,13 @@ public class AccountService {
     }
 
     public Account verifyAccount(String username, String password) {
+        try {
         return accountDao.getAccountByUsernameAndPassword(username, password).get();
-        
+        } catch (NoSuchElementException e) {
+            System.out.println("Invalid username and password");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Account getAccountById(int id) {
