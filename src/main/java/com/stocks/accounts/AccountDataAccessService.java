@@ -1,10 +1,11 @@
 package com.stocks.accounts;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.batch.BatchProperties.Jdbc;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -20,39 +21,44 @@ public class AccountDataAccessService implements AccountDao {
 
     @Override
     public List<Account> getAccounts() {
-        // TODO Auto-generated method stub
-        return null;
+        String sql = "get id, username, password, held_by from account fetch first 100 rows only";
+        return jdbcTemplate.query(sql, new AccountRowMapper());
+        
     }
 
     @Override
     public int insertAccount(Account account) {
-        String sql = "insert into Account(id, userName, password, held_by) values(?, ?, ?, ?)";
+        String sql = "insert into Account(id, userName, password, held_by) values(account_id_seq.nextval, ?, ?, ?)";
         return jdbcTemplate.update(
             sql, 
-            account.getId(), account.getUserName(), account.getPassword(), account.getHeld_by()
+            account.getUserName(), account.getPassword(), account.getHeld_by()
             );
     }
 
     @Override
     public int deleteAccount(int id) {
-        // TODO Auto-generated method stub
-        return 0;
+        String sql = "delete from account where id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 
     @Override
-    public Optional<Account> selectAccountById(int id) {
-        // TODO Auto-generated method stub
-        return Optional.empty();
+    public Optional<Account> getAccountById(int id) {
+        String sql = "select id, username, password, held_by from account where id = ?";
+        return jdbcTemplate.query(sql, new AccountRowMapper(), id).stream().findFirst();
     }
 
-    public Optional<Account> selectAcountByUsernameAndPassword(String username, String password) {
+    @Override
+    public Optional<Account> getAccountByUsernameAndPassword(String username, String password) throws NoSuchElementException {
         String sql = "select id, username, password, held_by from account where username = ? and password = ?";
         try {
             return jdbcTemplate.query(sql, new AccountRowMapper(), username, password)
                     .stream().
                     findFirst();
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             System.out.println("Could not find account with Credentials: " + username + ", password: " + password);
+            return null;
+        } catch (DataAccessException e) {
+            System.out.println("Error accessing the data with the given query.");
             return null;
         }
     }

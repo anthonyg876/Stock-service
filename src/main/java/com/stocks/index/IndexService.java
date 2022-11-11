@@ -40,7 +40,6 @@ public class IndexService {
         });
     }
 
-
     public Index getIndex(String id) {
         Index index;
         try {
@@ -84,8 +83,6 @@ public class IndexService {
             // Add index to the database.
             addNewIndex(index);
         }
-
         //Read in the indices data.
-
     }
 }
