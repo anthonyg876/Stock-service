@@ -9,7 +9,6 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class Account {
-    
     @Getter @Setter private int id;
     @Getter @Setter private String userName;
     @Getter @Setter private String password;
@@ -17,5 +16,4 @@ public class Account {
 
     //For Jackson.
     public Account(){};
-
 }
