@@ -14,12 +14,9 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.sql.Date;
-import java.text.DecimalFormat;
 
 @Service
 public class StockService {
-
-    private static final DecimalFormat df = new DecimalFormat("0.00"); 
 
     @Autowired
     private StockPriceService stockPriceService;
