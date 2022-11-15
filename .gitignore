@@ -1,1 +1,5 @@
-/data
+data/
+/src
+.vscode
+target/
+.gitignore

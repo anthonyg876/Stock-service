@@ -31,6 +31,8 @@ public class UserController {
 
     @PostMapping(path = "/addUser")
     public ResponseEntity<?> addUser(@RequestBody User user) {
+        
+
         try {
         userService.addUser(user);
         } catch (SQLException e) {
@@ -41,7 +43,6 @@ public class UserController {
             System.out.println("Could not add user with email into the database.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Unable to add user.");
         }
-
             return ResponseEntity.status(HttpStatus.OK).body("Successfully added user.");
     }
     
