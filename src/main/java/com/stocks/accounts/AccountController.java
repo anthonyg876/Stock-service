@@ -22,8 +22,10 @@ public class AccountController {
     private AccountService accountService;
     
     @PostMapping(path = "/createAccount")
-    public void addAccount(@RequestBody Account account) {
+    public ResponseEntity<?> addAccount(@RequestBody Account account) {
         accountService.createAccount(account);
+
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully created account");
     }
 
     @PostMapping(path = "/login")
