@@ -2,4 +2,3 @@ data/
 /src
 .vscode
 target/
-.gitignore
