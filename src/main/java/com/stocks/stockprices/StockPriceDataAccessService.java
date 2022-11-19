@@ -23,7 +23,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
     @Transactional(readOnly = true)
     public List<StockPrice> getStockPrices(String id) {
         // String sql =  String.format("select dateOfPrice, low, open, volume, adjClosed, companyId from stockprices where companyId = %s", id);
-        String sql = "select dateOfPrice, low, open, volume, adjClosed, companyId from stockPrices where companyid = ?";
+        String sql = "select dateOfPrice, open, high, low, adjClosed, volume, companyId from stockPrices where companyid = ?";
         try {
             // Set fetch size higher when retrieving large amounts of data.
             jdbcTemplate.setFetchSize(10000);
@@ -40,10 +40,11 @@ public class StockPriceDataAccessService implements StockPriceDao {
     @Override
     public int insertStockPrice(StockPrice stockPrice) {
         // @TODO: Check if the stockPrice exists.
-        String sql = "insert into stockprices(dateOfPrice, low, open, volume, adjClosed, companyId) values(?, ?, ?, ?, ?, ?)";
+        String sql = "insert into stockprices(dateOfPrice, open, high, low, adjClosed, volume, companyId) values(?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(
             sql,
-            stockPrice.getDateOfPrice(), stockPrice.getLow(), stockPrice.getOpen(), stockPrice.getVolume(), stockPrice.getAdjClosed(), stockPrice.getCompanyId()
+            stockPrice.getDateOfPrice(), stockPrice.getOpen(), stockPrice.getHigh(),
+            stockPrice.getLow(), stockPrice.getAdjClosed(), stockPrice.getVolume(), stockPrice.getCompanyId()
             );
     }
 
@@ -60,13 +61,13 @@ public class StockPriceDataAccessService implements StockPriceDao {
     }
     @Override
     public void insertAllStockPrices(List<StockPrice> stockPrices) {
-        String sql = "insert into stockprices(dateOfPrice, low, open, volume, adjClosed, companyId) values(?, ?, ?, ?, ?, ?)";
+        String sql = "insert into stockprices(dateOfPrice, open, high, low, adjClosed, volume, companyId) values(?, ?, ?, ?, ?, ?, ?)";
         
         ArrayList<Object[]> sqlArgs = new ArrayList<>();
 
         for (StockPrice stockPrice: stockPrices) {
-            Object[] stockPriceData = {stockPrice.getDateOfPrice(), stockPrice.getLow(), stockPrice.getOpen(),
-                                    stockPrice.getVolume(), stockPrice.getAdjClosed(), stockPrice.getCompanyId()}
+            Object[] stockPriceData = {stockPrice.getDateOfPrice(), stockPrice.getOpen(), stockPrice.getHigh(),
+                                    stockPrice.getLow(), stockPrice.getAdjClosed(), stockPrice.getVolume(), stockPrice.getCompanyId()}
                                     ;
             sqlArgs.add(stockPriceData);
         }
