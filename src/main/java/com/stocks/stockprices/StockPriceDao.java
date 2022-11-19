@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface StockPriceDao {
 
-    public List<StockPrice> getStockPrices();
+    public List<StockPrice> getStockPrices(String id);
     int insertStockPrice(StockPrice stockPrice);
     void insertAllStockPrices(List<StockPrice> stockPrices);
     int deleteStockPrice(String id);

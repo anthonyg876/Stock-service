@@ -21,7 +21,7 @@ public class AccountDataAccessService implements AccountDao {
 
     @Override
     public List<Account> getAccounts() {
-        String sql = "get id, username, password, held_by from account fetch first 100 rows only";
+        String sql = "select id, username, password, held_by from account fetch first 100 rows only";
         return jdbcTemplate.query(sql, new AccountRowMapper());
     }
 

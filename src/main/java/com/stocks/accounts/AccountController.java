@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.stocks.email.EmailDetails;
-import com.stocks.email.EmailService;
-
 @RestController
 @RequestMapping(path = "api/v1/account")
 public class AccountController {
@@ -24,15 +21,16 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
     
-    @Autowired
-    private EmailService EmailService;
+    // @Autowired
+    // private EmailService EmailService;
 
     @PostMapping(path = "/createAccount")
     public ResponseEntity<?> addAccount(@RequestBody Account account) {
         try {    
             accountService.createAccount(account);
-            String Status = EmailService.sendSimpleMail(new EmailDetails(account.getHeld_by(), "Congratulations " + account.getUserName() +  " on creating an account!", "Stock Salsa account creation", null));
-            System.out.println(Status);
+            // @TODO: Need to fix email sending, currently throws error.
+            // String Status = EmailService.sendSimpleMail(new EmailDetails(account.getHeld_by(), "Congratulations " + account.getUserName() +  " on creating an account!", "Stock Salsa account creation", null));
+            // System.out.println(Status);
 
             return ResponseEntity.status(HttpStatus.OK).body("Successfully created account");
         } catch (Exception e) {
