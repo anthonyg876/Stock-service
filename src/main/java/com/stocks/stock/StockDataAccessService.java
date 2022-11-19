@@ -1,11 +1,11 @@
 package com.stocks.stock;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class StockDataAccessService implements StockDao {
@@ -19,9 +19,29 @@ public class StockDataAccessService implements StockDao {
 
     @Override
     public List<Stock> selectStocks() {
-        String sql = "select symbol, fullName, inDJGT, inDJI, inNDX from stock order by symbol asc fetch first 100 rows only";
+        String sql = "select symbol, fullName, inDJGT, inDJI, inNDX from stock";
+        jdbcTemplate.setFetchSize(2000);
         List<Stock> stocks = jdbcTemplate.query(sql, new StockRowMapper());
+        jdbcTemplate.setFetchSize(10);
         return stocks;
+    }
+
+    @Override
+    public List<String> getStockIds() {
+        String sql = "select symbol from stock";
+        jdbcTemplate.setFetchSize(2500);
+        List<String> symbols = jdbcTemplate.queryForList(sql, String.class);
+        jdbcTemplate.setFetchSize(10);
+        return symbols;
+    }
+
+    @Override
+    public List<String> getStockNames() {
+        String sql = "select fullName from stock";
+        jdbcTemplate.setFetchSize(2500);
+        List<String> names = jdbcTemplate.queryForList(sql, String.class);
+        jdbcTemplate.setFetchSize(10);
+        return names;
     }
 
     @Override
@@ -41,4 +61,6 @@ public class StockDataAccessService implements StockDao {
     public Optional<Stock> selectStockById(String id) {
     throw new UnsupportedOperationException("not implemented");
     }
+
+   
 }

@@ -13,8 +13,16 @@ public class StockPriceService {
         this.stockPriceDao = stockPriceDao;
     }
     
-    public List<StockPrice> getStockPrices() {
-        return stockPriceDao.getStockPrices();
+    /**
+     * Returns the stockPrices for all stocks with the given id.
+     * The id param is the symbol of the wanted stock.
+     * Returns all the stockPrices of a given stock.
+     * 
+     * @param id
+     * @return List
+     */
+    public List<StockPrice> getStockPrices(String id) {
+        return stockPriceDao.getStockPrices(id);
     }
 
     public void addStockPrices(List<StockPrice> stockPrices) {

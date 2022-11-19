@@ -21,9 +21,21 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
     
+    // @Autowired
+    // private EmailService EmailService;
+
     @PostMapping(path = "/createAccount")
-    public void addAccount(@RequestBody Account account) {
-        accountService.createAccount(account);
+    public ResponseEntity<?> addAccount(@RequestBody Account account) {
+        try {    
+            accountService.createAccount(account);
+            // @TODO: Need to fix email sending, currently throws error.
+            // String Status = EmailService.sendSimpleMail(new EmailDetails(account.getHeld_by(), "Congratulations " + account.getUserName() +  " on creating an account!", "Stock Salsa account creation", null));
+            // System.out.println(Status);
+
+            return ResponseEntity.status(HttpStatus.OK).body("Successfully created account");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unable to create account");
+        }
     }
 
     @PostMapping(path = "/login")

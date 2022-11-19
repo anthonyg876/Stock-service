@@ -1,9 +1,0 @@
-com/stocks/stockservice/stock/StockService.class
-com/stocks/stockservice/stock/StockIndex.class
-com/stocks/stockservice/users/Account.class
-com/stocks/persistence/stockRepository.class
-com/stocks/stockservice/stock/StockPrices.class
-com/stocks/stockservice/stock/StockController.class
-com/stocks/stockservice/users/Users.class
-com/stocks/stockservice/StockServiceApplication.class
-com/stocks/stockservice/stock/Stock.class

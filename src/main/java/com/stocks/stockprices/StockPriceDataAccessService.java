@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class StockPriceDataAccessService implements StockPriceDao {
@@ -17,11 +18,23 @@ public class StockPriceDataAccessService implements StockPriceDao {
     public StockPriceDataAccessService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
+    
     @Override
-    public List<StockPrice> getStockPrices() {
-        // TODO Auto-generated method stub
-        return null;
+    @Transactional(readOnly = true)
+    public List<StockPrice> getStockPrices(String id) {
+        // String sql =  String.format("select dateOfPrice, low, open, volume, adjClosed, companyId from stockprices where companyId = %s", id);
+        String sql = "select dateOfPrice, low, open, volume, adjClosed, companyId from stockPrices where companyid = ?";
+        try {
+            // Set fetch size higher when retrieving large amounts of data.
+            jdbcTemplate.setFetchSize(10000);
+            List<StockPrice> prices = jdbcTemplate.query(sql, new StockPriceRowMapper(), id);
+            // List<StockPrice> prices = jdbcTemplate.query(sql2, new StockPriceRowMapper(), id);
+            jdbcTemplate.setFetchSize(10);
+            return prices;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

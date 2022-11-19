@@ -21,14 +21,13 @@ public class AccountDataAccessService implements AccountDao {
 
     @Override
     public List<Account> getAccounts() {
-        String sql = "get id, username, password, held_by from account fetch first 100 rows only";
+        String sql = "select id, username, password, held_by from account fetch first 100 rows only";
         return jdbcTemplate.query(sql, new AccountRowMapper());
-        
     }
 
     @Override
     public int insertAccount(Account account) {
-        String sql = "insert into Account(id, userName, password, held_by) values(account_id_seq.nextval, ?, ?, ?)";
+        String sql = "insert into Account(userName, password, held_by) values(?, ?, ?)";
         return jdbcTemplate.update(
             sql, 
             account.getUserName(), account.getPassword(), account.getHeld_by()
