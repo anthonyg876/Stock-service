@@ -1,19 +1,19 @@
 package com.stocks.stock;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.stocks.stockprices.StockPrice;
-import com.stocks.stockprices.StockPriceService;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-import java.sql.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.stocks.stockprices.StockPrice;
+import com.stocks.stockprices.StockPriceService;
 
 @Service
 public class StockService {
@@ -36,6 +36,14 @@ public class StockService {
 
     public List<Stock> selectStocks() {
         return stockDao.selectStocks();
+    }
+
+    public List<String> getStockIds() {
+        return stockDao.getStockIds();
+    }
+
+    public List<String> getStockNames() {
+        return stockDao.getStockNames();
     }
 
     public void deleteStock(String id) {
@@ -105,6 +113,8 @@ public class StockService {
                         String fullName = scStockName.next();
                         nameOfStock = nameOfStock + fullName;
                         if (fullName.contains("\"")) {
+                            nameOfStock = nameOfStock.substring(1, nameOfStock.length() - 1);
+                            System.out.println(nameOfStock);
                             break;
                         }
                     }
@@ -129,6 +139,7 @@ public class StockService {
             double open;
             double high;
             double low;
+            double close;
             double adjClose;
             int volume;
             String volume_;
@@ -141,7 +152,7 @@ public class StockService {
                     open = sc.nextDouble();
                     high = sc.nextDouble();
                     low = sc.nextDouble();
-                    sc.nextDouble();
+                    close = sc.nextDouble();
                     adjClose = sc.nextDouble();
                     volume_ = sc.nextLine();    
                 } catch (InputMismatchException ime) {
@@ -173,7 +184,7 @@ public class StockService {
                     System.out.println("Could not parse date: " + date_);
                     break;
                 }
-                StockPrice stockPrice = new StockPrice(date, low, open, volume, adjClose, symbol);
+                StockPrice stockPrice = new StockPrice(date, low, open, volume, close, symbol);
                 stockPrices.add(stockPrice);
             }
             stockPriceService.addStockPrices(stockPrices);  
