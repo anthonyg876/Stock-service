@@ -184,7 +184,7 @@ public class StockService {
                     System.out.println("Could not parse date: " + date_);
                     break;
                 }
-                StockPrice stockPrice = new StockPrice(date, low, open, volume, close, symbol);
+                StockPrice stockPrice = new StockPrice(date, open, high, low, close, volume, symbol);
                 stockPrices.add(stockPrice);
             }
             stockPriceService.addStockPrices(stockPrices);  
