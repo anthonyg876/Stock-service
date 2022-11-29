@@ -76,4 +76,17 @@ public class StockPriceDataAccessService implements StockPriceDao {
         
     }
 
+    @Override
+    public double averageVolumeOfStock(String id, String begin, String end) {
+        String sql = "SELECT AVG(VOLUME) FROM stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE <= ?";
+        double averageVolume = 0;
+        try {
+            averageVolume =  jdbcTemplate.queryForObject(sql, Double.class, id, begin, end);
+            return averageVolume;        
+        } catch (Exception e) {
+            e.printStackTrace();
+            return averageVolume;
+        }
+    }
+
 }

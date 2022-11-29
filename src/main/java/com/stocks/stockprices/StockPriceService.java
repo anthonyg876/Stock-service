@@ -37,4 +37,8 @@ public class StockPriceService {
         }
     }
 
+    public double getAverageVolumeOfStock(String id, String initialDate, String afterDate) {
+        return stockPriceDao.averageVolumeOfStock(id, initialDate, afterDate);
+    }
+
 }
