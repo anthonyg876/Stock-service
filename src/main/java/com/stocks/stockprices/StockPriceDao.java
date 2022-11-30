@@ -10,8 +10,13 @@ public interface StockPriceDao {
     void insertAllStockPrices(List<StockPrice> stockPrices);
     int deleteStockPrice(String id);
     Optional<StockPrice> selectStockPriceById(String id);
+    int getTotalTuples();
     //Queries for final project
     double averageVolumeOfStock(String id, String begin, String end);
+
+    double averageClosingPrice(String id, String begin, String end);
+
+    
     
 
 

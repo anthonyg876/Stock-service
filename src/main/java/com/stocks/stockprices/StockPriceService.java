@@ -37,8 +37,17 @@ public class StockPriceService {
         }
     }
 
+    public int getTotalTuples() {
+        return stockPriceDao.getTotalTuples();
+    }
     public double getAverageVolumeOfStock(String id, String initialDate, String afterDate) {
         return stockPriceDao.averageVolumeOfStock(id, initialDate, afterDate);
     }
+
+    public double getAverageClosingPrice(String id, String initialDate, String endDate) {
+        return stockPriceDao.averageClosingPrice(id, initialDate, endDate);
+    }
+
+    
 
 }

@@ -89,4 +89,31 @@ public class StockPriceDataAccessService implements StockPriceDao {
         }
     }
 
+    @Override
+    public double averageClosingPrice(String id, String begin, String end) {
+        String sql = "SELECT avg(adjClosed) FROM stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE <= ?";
+        double avgClose = 0;
+        try {
+            avgClose = jdbcTemplate.queryForObject(sql, Double.class, id, begin, end);
+            return avgClose;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return avgClose;
+        }
+    }
+
+    @Override
+    public int getTotalTuples() {
+        String sql = "select count(*) from stockPrices";
+        int tuplesCount = 0;
+        try {
+            tuplesCount =  jdbcTemplate.queryForObject(sql, Integer.class);
+            return tuplesCount;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
 }
