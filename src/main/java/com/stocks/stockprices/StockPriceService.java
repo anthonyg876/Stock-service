@@ -1,6 +1,7 @@
 package com.stocks.stockprices;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,10 @@ public class StockPriceService {
 
     public double getAverageClosingPrice(String id, String initialDate, String endDate) {
         return stockPriceDao.averageClosingPrice(id, initialDate, endDate);
+    }
+
+    public List<Map<String, Object>> getPriceChanges(String id, String initialDate, String endDate) {
+        return stockPriceDao.getStockPriceUpdates(id, initialDate, endDate);
     }
 
     
