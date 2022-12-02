@@ -119,7 +119,21 @@ public class StockPriceDataAccessService implements StockPriceDao {
 
     @Override
     public List<Map<String, Object>> getStockPriceUpdates(String id, String begin, String end) {
-        String sql = "SELECT DATEOFPRICE, (ADJCLOSED - OPEN) AS \"DPC\", 100 - ((OPEN / ADJCLOSED) * 100) AS \"PC\" FROM agravier.stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE < ? ORDER BY DATEOFPRICE ASC";
+        String sql = "SELECT DATEOFPRICE, (ADJCLOSED - OPEN) AS \"DPC\" FROM agravier.stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE < ? ORDER BY DATEOFPRICE ASC";
+        List<Map<String, Object>> priceChanges;
+        try {
+            priceChanges = jdbcTemplate.queryForList(sql, id, begin, end);
+            return priceChanges;
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<Map<String, Object>> getPricePercentageChanges(String id, String begin, String end) {
+        String sql = "SELECT DATEOFPRICE, 100 - ((OPEN / ADJCLOSED) * 100) AS \"PC\" FROM agravier.stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE < ? ORDER BY DATEOFPRICE ASC";
         List<Map<String, Object>> priceChanges;
         try {
             priceChanges = jdbcTemplate.queryForList(sql, id, begin, end);

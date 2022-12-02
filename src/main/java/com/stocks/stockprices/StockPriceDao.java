@@ -19,6 +19,8 @@ public interface StockPriceDao {
 
     List<Map<String, Object>> getStockPriceUpdates(String id, String begin, String end);
 
+    List<Map<String, Object>> getPricePercentageChanges(String id, String begin, String end);
+
     
     
 
