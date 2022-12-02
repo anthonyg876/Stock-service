@@ -1,6 +1,7 @@
 package com.stocks.stockprices;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface StockPriceDao {
@@ -15,6 +16,10 @@ public interface StockPriceDao {
     double averageVolumeOfStock(String id, String begin, String end);
 
     double averageClosingPrice(String id, String begin, String end);
+
+    List<Map<String, Object>> getStockPriceUpdates(String id, String begin, String end);
+
+    List<Map<String, Object>> getPricePercentageChanges(String id, String begin, String end);
 
     
     

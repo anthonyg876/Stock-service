@@ -1,9 +1,9 @@
 package com.stocks.stockprices;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,4 +56,24 @@ public class StockPriceController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(avgClose);
     }
+
+    @PostMapping("/priceChanges")
+    public ResponseEntity<?> priceChanges(@RequestBody ArrayList<String> stockPriceInfo) {
+        List<Map<String, Object>> priceChanges = stockPriceService.getPriceChanges(stockPriceInfo.get(0), stockPriceInfo.get(1), stockPriceInfo.get(2));
+        if (priceChanges.size() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not get the price changes from: " + stockPriceInfo.get(0));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(priceChanges);
+    }
+
+    @PostMapping("/percentageChanges")
+    public ResponseEntity<?> percentageChanges(@RequestBody ArrayList<String> stockPriceInfo) {
+        List<Map<String, Object>> percentageChanges = stockPriceService.getPercentageChanges(stockPriceInfo.get(0), stockPriceInfo.get(1), stockPriceInfo.get(2));
+        if (percentageChanges.size() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not get the price changes from: " + stockPriceInfo.get(0));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(percentageChanges);
+    }
+
+    
 }
