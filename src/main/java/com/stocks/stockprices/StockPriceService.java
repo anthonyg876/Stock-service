@@ -53,6 +53,7 @@ public class StockPriceService {
         return stockPriceDao.getStockPriceUpdates(id, initialDate, endDate);
     }
 
-    
-
+    public List<Map<String, Object>> getPercentageChanges(String id, String initialDate, String endDate) {
+        return stockPriceDao.getPricePercentageChanges(id, initialDate, endDate);
+    }
 }
