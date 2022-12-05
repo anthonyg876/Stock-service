@@ -1,7 +1,6 @@
 package com.stocks.stockprices;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -183,17 +182,17 @@ public class StockPriceDataAccessService implements StockPriceDao {
     }
 
     @Override
-    public Map<String, Object> highestGrownStocksInMarket(String begin, String end) {
-        Map<String, Object> stocks = new HashMap<String, Object>();
+    public List<StockPriceResult> lowestGrownStocksInMarket(String begin, String end) {
+        List<StockPriceResult> stocks = new ArrayList<StockPriceResult>();
         String sql = "select fullname, \"growthInYear\" from " + 
         "(SELECT s.CompanyID, (sum(100 - ((OPEN / ADJCLOSED) * 100))) AS \"growthInYear\" " +
         "FROM agravier.stockprices s " + 
         "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? " +
         "group by CompanyID " +
-        "order by \"growthInYear\" desc " +
+        "order by \"growthInYear\" asc " +
         "fetch first 5 rows only) s, stock where stock.symbol = s.companyID";
         try {
-            stocks = jdbcTemplate.queryForMap(sql, begin, end);
+            stocks = jdbcTemplate.query(sql, new StockPriceResultRowMapper(), begin, end);
             return stocks;
         }
         catch (Exception e) {

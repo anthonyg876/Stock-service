@@ -23,10 +23,6 @@ public interface StockPriceDao {
 
     List<StockPriceResult> getHighestGrowingStocks(String begin, String end, String index);
 
-    Map<String, Object> highestGrownStocksInMarket(String begin, String end);
-
-    
-    
-
+    List<StockPriceResult> lowestGrownStocksInMarket(String begin, String end);
 
 }

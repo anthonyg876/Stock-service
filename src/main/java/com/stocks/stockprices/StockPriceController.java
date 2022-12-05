@@ -82,5 +82,13 @@ public class StockPriceController {
         return ResponseEntity.status(HttpStatus.OK).body(highestGrownStocks);
     } 
 
+    @PostMapping("/lowestGrowingStocks")
+    public ResponseEntity<?> lowestGrowingStocks(@RequestBody ArrayList<String> stockPriceInfo) {
+        List<StockPriceResult> lowestGrownStocks = stockPriceService.getLowestGrowingStocks(stockPriceInfo.get(0), stockPriceInfo.get(1));
+        if (lowestGrownStocks.size() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not get the price changes from: " + stockPriceInfo.get(0));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(lowestGrownStocks);
+    }
     
 }
