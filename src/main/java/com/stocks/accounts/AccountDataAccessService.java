@@ -21,13 +21,13 @@ public class AccountDataAccessService implements AccountDao {
 
     @Override
     public List<Account> getAccounts() {
-        String sql = "select id, username, password, held_by from account fetch first 100 rows only";
+        String sql = "select id, username, password, held_by from agravier.account fetch first 100 rows only";
         return jdbcTemplate.query(sql, new AccountRowMapper());
     }
 
     @Override
     public int insertAccount(Account account) {
-        String sql = "insert into Account(userName, password, held_by) values(?, ?, ?)";
+        String sql = "insert into agravier.Account(userName, password, held_by) values(?, ?, ?)";
         return jdbcTemplate.update(
             sql, 
             account.getUserName(), account.getPassword(), account.getHeld_by()
@@ -36,19 +36,19 @@ public class AccountDataAccessService implements AccountDao {
 
     @Override
     public int deleteAccount(int id) {
-        String sql = "delete from account where id = ?";
+        String sql = "delete from agravier.account where id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Optional<Account> getAccountById(int id) {
-        String sql = "select id, username, password, held_by from account where id = ?";
+        String sql = "select id, username, password, held_by from agravier.account where id = ?";
         return jdbcTemplate.query(sql, new AccountRowMapper(), id).stream().findFirst();
     }
 
     @Override
     public Optional<Account> getAccountByUsernameAndPassword(String username, String password) throws NoSuchElementException {
-        String sql = "select id, username, password, held_by from account where username = ? and password = ?";
+        String sql = "select id, username, password, held_by from agravier.account where username = ? and password = ?";
         try {
             return jdbcTemplate.query(sql, new AccountRowMapper(), username, password)
                     .stream().

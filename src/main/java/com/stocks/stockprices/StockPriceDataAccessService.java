@@ -24,7 +24,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
     @Transactional(readOnly = true)
     public List<StockPrice> getStockPrices(String id) {
         // String sql =  String.format("select dateOfPrice, low, open, volume, adjClosed, companyId from stockprices where companyId = %s", id);
-        String sql = "select dateOfPrice, open, high, low, adjClosed, volume, companyId from stockPrices where companyid = ?";
+        String sql = "select dateOfPrice, open, high, low, adjClosed, volume, companyId from agravier.stockPrices where companyid = ?";
         try {
             // Set fetch size higher when retrieving large amounts of data.
             jdbcTemplate.setFetchSize(10000);
@@ -41,7 +41,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
     @Override
     public int insertStockPrice(StockPrice stockPrice) {
         // @TODO: Check if the stockPrice exists.
-        String sql = "insert into stockprices(dateOfPrice, open, high, low, adjClosed, volume, companyId) values(?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into agravier.stockprices(dateOfPrice, open, high, low, adjClosed, volume, companyId) values(?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(
             sql,
             stockPrice.getDateOfPrice(), stockPrice.getOpen(), stockPrice.getHigh(),
@@ -62,7 +62,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
     }
     @Override
     public void insertAllStockPrices(List<StockPrice> stockPrices) {
-        String sql = "insert into stockprices(dateOfPrice, open, high, low, adjClosed, volume, companyId) values(?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into agravier.stockprices(dateOfPrice, open, high, low, adjClosed, volume, companyId) values(?, ?, ?, ?, ?, ?, ?)";
         
         ArrayList<Object[]> sqlArgs = new ArrayList<>();
 
@@ -79,7 +79,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
 
     @Override
     public double averageVolumeOfStock(String id, String begin, String end) {
-        String sql = "SELECT AVG(VOLUME) FROM stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE <= ?";
+        String sql = "SELECT AVG(VOLUME) FROM agravier.stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE <= ?";
         double averageVolume = 0;
         try {
             averageVolume =  jdbcTemplate.queryForObject(sql, Double.class, id, begin, end);
@@ -92,7 +92,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
 
     @Override
     public double averageClosingPrice(String id, String begin, String end) {
-        String sql = "SELECT avg(adjClosed) FROM stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE <= ?";
+        String sql = "SELECT avg(adjClosed) FROM agravier.stockprices WHERE companyID = ? and DATEOFPRICE >= ? and DATEOFPRICE <= ?";
         double avgClose = 0;
         try {
             avgClose = jdbcTemplate.queryForObject(sql, Double.class, id, begin, end);
@@ -105,7 +105,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
 
     @Override
     public int getTotalTuples() {
-        String sql = "select count(*) from stockPrices";
+        String sql = "select count(*) from agravier.stockPrices";
         int tuplesCount = 0;
         try {
             tuplesCount =  jdbcTemplate.queryForObject(sql, Integer.class);
@@ -153,7 +153,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
         "(select companyId from " + 
             "(SELECT  CompanyID, (sum(100 - ((OPEN / ADJCLOSED) * 100))) AS \"growthInYear\" " +
                 "FROM agravier.stockprices " + 
-                "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? and companyId in (select symbol from stock where inDJI = ?) " + 
+                "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? and companyId in (select symbol from agravier.stock where inDJI = ?) " + 
                 "group by CompanyID " + 
                 "order by \"growthInYear\" desc " +
                 "fetch first 5 rows only))";
@@ -161,7 +161,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
             String sql2 = "select \"growthInYear\" from " + 
             "(SELECT  CompanyID, (sum(100 - ((OPEN / ADJCLOSED) * 100))) AS \"growthInYear\" " +
                 "FROM agravier.stockprices " + 
-                "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? and companyId in (select symbol from stock where inDJI = ?) " + 
+                "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? and companyId in (select symbol from agravier.stock where inDJI = ?) " + 
                 "group by CompanyID " + 
                 "order by \"growthInYear\" desc " +
                 "fetch first 5 rows only)";
@@ -190,7 +190,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
         "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? " +
         "group by CompanyID " +
         "order by \"growthInYear\" asc " +
-        "fetch first 5 rows only) s, stock where stock.symbol = s.companyID";
+        "fetch first 5 rows only) s, agravier.stock where stock.symbol = s.companyID";
         try {
             stocks = jdbcTemplate.query(sql, new StockPriceResultRowMapper(), begin, end);
             return stocks;

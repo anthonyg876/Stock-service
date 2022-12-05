@@ -25,7 +25,7 @@ public class IndexDataAccessService implements IndexDao {
 
     @Override
     public int insertIndex(Index index) {
-        String sql = "insert into stockindex(id, numberOfStocks, name) values(?, ?, ?)";
+        String sql = "insert into agravier.stockindex(id, numberOfStocks, name) values(?, ?, ?)";
         return jdbcTemplate.update(
             sql,
             index.getId(), index.getNumberOfStocks(), index.getName()
