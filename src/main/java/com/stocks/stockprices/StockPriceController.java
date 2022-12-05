@@ -41,7 +41,6 @@ public class StockPriceController {
     }
 
 /** All the commands for the 5 final queries are here*/
-
     @PostMapping("/averageVolume") 
     public ResponseEntity<?> getAverageVolume(@RequestBody ArrayList<String> stockPriceInfo) {
         double averageVolume = stockPriceService.getAverageVolumeOfStock(stockPriceInfo.get(0), stockPriceInfo.get(1), stockPriceInfo.get(2));

@@ -32,7 +32,6 @@ public class UserController {
     @PostMapping(path = "/addUser")
     public ResponseEntity<?> addUser(@RequestBody User user) {
         
-
         try {
         userService.addUser(user);
         } catch (SQLException e) {
