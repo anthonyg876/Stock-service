@@ -1,6 +1,7 @@
 package com.stocks.stockprices;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -143,6 +144,42 @@ public class StockPriceDataAccessService implements StockPriceDao {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public Map<String, Double> getHighestGrowingStocks(String begin, String end, String index) {
+        Map<String, Double> highestGrownStocks = new HashMap<String, Double>();
+
+        String sql = "select fullName from stock where symbol in " +
+        "(select companyId from " + 
+            "(SELECT  CompanyID, (sum(100 - ((OPEN / ADJCLOSED) * 100))) AS \"growthInYear\" " +
+                "FROM agravier.stockprices " + 
+                "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? and companyId in (select symbol from stock where inDJI = ?) " + 
+                "group by CompanyID " + 
+                "order by \"growthInYear\" desc " +
+                "fetch first 5 rows only))";
+
+            String sql2 = "select \"growthInYear\" from " + 
+            "(SELECT  CompanyID, (sum(100 - ((OPEN / ADJCLOSED) * 100))) AS \"growthInYear\" " +
+                "FROM agravier.stockprices " + 
+                "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? and companyId in (select symbol from stock where inDJI = ?) " + 
+                "group by CompanyID " + 
+                "order by \"growthInYear\" desc " +
+                "fetch first 5 rows only)";
+            try {
+                List<String> namesOfStocks = jdbcTemplate.queryForList(sql, String.class, begin, end, index);
+                List<Double> percentageIncreases = jdbcTemplate.queryForList(sql2, Double.class, begin, end, index);
+                for (int i = 0; i < namesOfStocks.size(); i++) {
+                    String name = namesOfStocks.get(i);
+                    double percentIncrease = percentageIncreases.get(i).doubleValue();
+                    highestGrownStocks.put(name, percentIncrease);
+                } 
+            }
+            catch (Exception e) {
+                System.out.println("Could not perform query to get fullNames.");
+                return null;
+            }
+            return highestGrownStocks;
     }
 
 }

@@ -56,4 +56,8 @@ public class StockPriceService {
     public List<Map<String, Object>> getPercentageChanges(String id, String initialDate, String endDate) {
         return stockPriceDao.getPricePercentageChanges(id, initialDate, endDate);
     }
+
+    public Map<String, Double> getHighestGrowingStocks(String initialDate, String endDate, String index) {
+        return stockPriceDao.getHighestGrowingStocks(initialDate, endDate, index);
+    }
 }
