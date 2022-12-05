@@ -75,7 +75,7 @@ public class StockPriceController {
     }
     @PostMapping("/highestGrowingStocks")
     public ResponseEntity<?> highestGrowingStocks(@RequestBody ArrayList<String> stockPriceInfo) {
-        Map<String, Double> highestGrownStocks = stockPriceService.getHighestGrowingStocks(stockPriceInfo.get(0), stockPriceInfo.get(1), stockPriceInfo.get(2));
+        List<StockPriceResult> highestGrownStocks = stockPriceService.getHighestGrowingStocks(stockPriceInfo.get(0), stockPriceInfo.get(1), stockPriceInfo.get(2));
         if (highestGrownStocks.size() == 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not get the price changes from: " + stockPriceInfo.get(0));
         }

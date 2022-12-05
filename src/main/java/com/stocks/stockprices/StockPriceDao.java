@@ -21,7 +21,9 @@ public interface StockPriceDao {
 
     List<Map<String, Object>> getPricePercentageChanges(String id, String begin, String end);
 
-    Map<String, Double> getHighestGrowingStocks(String begin, String end, String index);
+    List<StockPriceResult> getHighestGrowingStocks(String begin, String end, String index);
+
+    Map<String, Object> highestGrownStocksInMarket(String begin, String end);
 
     
     

@@ -147,8 +147,8 @@ public class StockPriceDataAccessService implements StockPriceDao {
     }
 
     @Override
-    public Map<String, Double> getHighestGrowingStocks(String begin, String end, String index) {
-        Map<String, Double> highestGrownStocks = new HashMap<String, Double>();
+    public List<StockPriceResult> getHighestGrowingStocks(String begin, String end, String index) {
+        List<StockPriceResult> highestGrownStocks = new ArrayList<StockPriceResult>();
 
         String sql = "select fullName from stock where symbol in " +
         "(select companyId from " + 
@@ -172,7 +172,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
                 for (int i = 0; i < namesOfStocks.size(); i++) {
                     String name = namesOfStocks.get(i);
                     double percentIncrease = percentageIncreases.get(i).doubleValue();
-                    highestGrownStocks.put(name, percentIncrease);
+                    highestGrownStocks.add(new StockPriceResult(name, percentIncrease));
                 } 
             }
             catch (Exception e) {
@@ -180,6 +180,26 @@ public class StockPriceDataAccessService implements StockPriceDao {
                 return null;
             }
             return highestGrownStocks;
+    }
+
+    @Override
+    public Map<String, Object> highestGrownStocksInMarket(String begin, String end) {
+        Map<String, Object> stocks = new HashMap<String, Object>();
+        String sql = "select fullname, \"growthInYear\" from " + 
+        "(SELECT s.CompanyID, (sum(100 - ((OPEN / ADJCLOSED) * 100))) AS \"growthInYear\" " +
+        "FROM agravier.stockprices s " + 
+        "WHERE DATEOFPRICE >= ? and DATEOFPRICE < ? " +
+        "group by CompanyID " +
+        "order by \"growthInYear\" desc " +
+        "fetch first 5 rows only) s, stock where stock.symbol = s.companyID";
+        try {
+            stocks = jdbcTemplate.queryForMap(sql, begin, end);
+            return stocks;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
