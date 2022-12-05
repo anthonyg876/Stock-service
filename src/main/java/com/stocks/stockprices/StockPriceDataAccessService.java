@@ -149,7 +149,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
     public List<StockPriceResult> getHighestGrowingStocks(String begin, String end, String index) {
         List<StockPriceResult> highestGrownStocks = new ArrayList<StockPriceResult>();
 
-        String sql = "select fullName from stock where symbol in " +
+        String sql = "select fullName from agravier.stock where symbol in " +
         "(select companyId from " + 
             "(SELECT  CompanyID, (sum(100 - ((OPEN / ADJCLOSED) * 100))) AS \"growthInYear\" " +
                 "FROM agravier.stockprices " + 
