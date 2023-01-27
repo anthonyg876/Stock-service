@@ -25,7 +25,7 @@ public class UserDataAccessService implements UserDao {
 
     @Override
     public int insertUser(User user) {
-        String sql = "insert into Users(email, firstName, lastName) values(?, ?, ?)";
+        String sql = "insert into agravier.Users(email, firstName, lastName) values(?, ?, ?)";
         return jdbcTemplate.update(
             sql,
             user.getEmail(), user.getFirstName(), user.getLastName()
@@ -34,13 +34,13 @@ public class UserDataAccessService implements UserDao {
 
     @Override
     public int deleteUser(String id) {
-        String sql = "delete from Users where email = ?";
+        String sql = "delete from agravier.Users where email = ?";
         return jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Optional<User> selectUserById(String id) {
-        String sql = "select email, firstName, lastName from users where email = ?";
+        String sql = "select email, firstName, lastName from agravier.users where email = ?";
         return jdbcTemplate.query(sql, new UserRowMapper(), id).stream().findFirst();
     }
     

@@ -41,7 +41,6 @@ public class StockPriceController {
     }
 
 /** All the commands for the 5 final queries are here*/
-
     @PostMapping("/averageVolume") 
     public ResponseEntity<?> getAverageVolume(@RequestBody ArrayList<String> stockPriceInfo) {
         double averageVolume = stockPriceService.getAverageVolumeOfStock(stockPriceInfo.get(0), stockPriceInfo.get(1), stockPriceInfo.get(2));
@@ -74,6 +73,22 @@ public class StockPriceController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(percentageChanges);
     }
+    @PostMapping("/highestGrowingStocks")
+    public ResponseEntity<?> highestGrowingStocks(@RequestBody ArrayList<String> stockPriceInfo) {
+        List<StockPriceResult> highestGrownStocks = stockPriceService.getHighestGrowingStocks(stockPriceInfo.get(0), stockPriceInfo.get(1), stockPriceInfo.get(2));
+        if (highestGrownStocks.size() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not get the price changes from: " + stockPriceInfo.get(0));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(highestGrownStocks);
+    } 
 
+    @PostMapping("/lowestGrowingStocks")
+    public ResponseEntity<?> lowestGrowingStocks(@RequestBody ArrayList<String> stockPriceInfo) {
+        List<StockPriceResult> lowestGrownStocks = stockPriceService.getLowestGrowingStocks(stockPriceInfo.get(0), stockPriceInfo.get(1));
+        if (lowestGrownStocks.size() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not get the price changes from: " + stockPriceInfo.get(0));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(lowestGrownStocks);
+    }
     
 }
