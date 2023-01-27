@@ -41,11 +41,11 @@ public class StockPriceDataAccessService implements StockPriceDao {
     @Override
     public int insertStockPrice(StockPrice stockPrice) {
         // @TODO: Check if the stockPrice exists.
-        String sql = "insert into agravier.stockprices(dateOfPrice, open, high, low, adjClosed, volume, companyId) values(?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into agravier.stockprices(dateOfPrice, low, open, volume, adjClosed, companyId) values(?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(
             sql,
-            stockPrice.getDateOfPrice(), stockPrice.getOpen(), stockPrice.getHigh(),
-            stockPrice.getLow(), stockPrice.getAdjClosed(), stockPrice.getVolume(), stockPrice.getCompanyId()
+            stockPrice.getDateOfPrice(), stockPrice.getLow(), stockPrice.getOpen(),
+            stockPrice.getVolume(), stockPrice.getAdjClosed(), stockPrice.getCompanyId()
             );
     }
 
@@ -62,13 +62,13 @@ public class StockPriceDataAccessService implements StockPriceDao {
     }
     @Override
     public void insertAllStockPrices(List<StockPrice> stockPrices) {
-        String sql = "insert into agravier.stockprices(dateOfPrice, open, high, low, adjClosed, volume, companyId) values(?, ?, ?, ?, ?, ?, ?)";
+        String sql = "insert into agravier.stockprices(dateOfPrice, low, open, volume, adjClosed, companyId) values(?, ?, ?, ?, ?, ?)";
         
         ArrayList<Object[]> sqlArgs = new ArrayList<>();
 
         for (StockPrice stockPrice: stockPrices) {
-            Object[] stockPriceData = {stockPrice.getDateOfPrice(), stockPrice.getOpen(), stockPrice.getHigh(),
-                                    stockPrice.getLow(), stockPrice.getAdjClosed(), stockPrice.getVolume(), stockPrice.getCompanyId()}
+            Object[] stockPriceData = {stockPrice.getDateOfPrice(), stockPrice.getLow(), stockPrice.getOpen(), stockPrice.getVolume(), 
+                                    stockPrice.getAdjClosed(), stockPrice.getCompanyId()}
                                     ;
             sqlArgs.add(stockPriceData);
         }

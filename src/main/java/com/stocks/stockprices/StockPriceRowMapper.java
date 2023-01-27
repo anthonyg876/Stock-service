@@ -13,11 +13,10 @@ public class StockPriceRowMapper implements RowMapper<StockPrice> {
     public StockPrice mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new StockPrice(
             rs.getDate("dateOfPrice"),
-            rs.getDouble("open"),
-            rs.getDouble("high"),
             rs.getDouble("low"),
-            rs.getDouble("adjClosed"),
+            rs.getDouble("open"),
             rs.getInt("volume"),
+            rs.getDouble("adjClosed"),
             rs.getString("companyId")
         );
     }

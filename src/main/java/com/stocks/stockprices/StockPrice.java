@@ -13,11 +13,10 @@ import lombok.ToString;
 public class StockPrice {
     
     @Getter @Setter private Date dateOfPrice;
-    @Getter @Setter private double open;
-    @Getter @Setter private double high;
     @Getter @Setter private double low;
-    @Getter @Setter private double adjClosed;
+    @Getter @Setter private double open;
     @Getter @Setter private int volume;
+    @Getter @Setter private double adjClosed;
     @Getter @Setter private String companyId;
     
     public StockPrice() {}
