@@ -24,7 +24,7 @@ public class StockPriceDataAccessService implements StockPriceDao {
     @Transactional(readOnly = true)
     public List<StockPrice> getStockPrices(String id) {
         // String sql =  String.format("select dateOfPrice, low, open, volume, adjClosed, companyId from stockprices where companyId = %s", id);
-        String sql = "select dateOfPrice, open, high, low, adjClosed, volume, companyId from agravier.stockPrices where companyid = ?";
+        String sql = "select dateOfPrice, low, open, volume, adjClosed, companyId from agravier.stockPrices where companyid = ?";
         try {
             // Set fetch size higher when retrieving large amounts of data.
             jdbcTemplate.setFetchSize(10000);
